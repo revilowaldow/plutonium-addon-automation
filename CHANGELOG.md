@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.1
+
+> 2025-09-17
+
+- Fixed possible crash when importing items with "Cauldron of Plentiful Resources" integration active
+
 ## 0.8.0
 
 > 2025-09-07
