@@ -123,5 +123,10 @@
 		"ver": "0.8.0",
 		"date": "2025-09-07",
 		"txt": "- Added support for dnd5e 5.1.x (and dropped support for older versions)"
+	},
+	{
+		"ver": "0.8.1",
+		"date": "2025-09-17",
+		"txt": "- Fixed possible crash when importing items with \"Cauldron of Plentiful Resources\" integration active"
 	}
 ]
