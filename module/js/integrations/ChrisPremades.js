@@ -179,8 +179,8 @@ export class IntegrationChrisPremades extends StartupHookMixin(IntegrationBase) 
 		// Note that we expect e.g. IDs to be preserved
 		// Examples:
 		//   - Animal Friendship (XPHB) -- effect should be correctly applied
-		if (Object.keys(fauxItemJson.system?.activities)?.length) {
-			fauxItemJson.activities = Object.values(fauxItemJson.system?.activities);
+		if (Object.keys(fauxItemJson.system?.activities || {}).length) {
+			fauxItemJson.activities = Object.values(fauxItemJson.system.activities);
 		}
 		delete fauxItemJson.system?.activities;
 
