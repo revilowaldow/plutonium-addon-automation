@@ -39,6 +39,7 @@ export class SettingsManager extends StartupHookMixin(class {}) {
 		// region chris-premades
 		// Enable configuration, as the integration uses default values
 		{moduleId: this._MODULE_ID__CHRIS_PREMADES, isGmOnly: true, settingKey: "permissionsConfigureItem", displaySettingName: "Medkit Configuration Permissions", expectedValue: 1},
+		{moduleId: this._MODULE_ID__CHRIS_PREMADES, isGmOnly: true, settingKey: "applyConditionChanges", displaySettingName: "Apply Midi-QOL Condition Effects", expectedValue: true},
 		// endregion
 	];
 
