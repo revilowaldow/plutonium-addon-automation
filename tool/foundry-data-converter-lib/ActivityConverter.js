@@ -165,6 +165,7 @@ export class ActivityConverter {
 		this._getPreClean_mutNonSpell({json, activity});
 		this._getPreClean_mutSpell({json, activity});
 		this._getPreClean_mutSummon({json, activity});
+		this._getPreClean_mutTransform({json, activity});
 
 		if (activity.duration?.units === "inst") delete activity.duration.units;
 		if (activity.range?.units === "self") delete activity.range.units;
@@ -174,7 +175,7 @@ export class ActivityConverter {
 
 		Object.entries(activity)
 			.forEach(([k, v]) => {
-				if (typeof v !== "object") return;
+				if (v == null || typeof v !== "object") return;
 				if (!v.override) return;
 				logger.warn(
 					`"override" found in "${k}" for activity "${json.name}" -> "${activity.name || activity.type}" ("${json._id}" -> "${activity._id}"):\n${JSON.stringify(v, null, "\t")}`,
@@ -224,6 +225,15 @@ export class ActivityConverter {
 		if (activity.type !== "summon") return;
 
 		delete activity?.summon?.prompt;
+
+		activity.profiles
+			?.forEach(profile => {
+				delete profile._id;
+			});
+	}
+
+	static _getPreClean_mutTransform ({json, activity}) {
+		if (activity.type !== "transform") return;
 
 		activity.profiles
 			?.forEach(profile => {
