@@ -555,6 +555,7 @@ export class ActivityConverter {
 		if (descriptionEntries?.length === 1 && typeof descriptionEntries[0] === "string") activity.description = descriptionEntries[0];
 		else if (descriptionEntries) activity.descriptionEntries = descriptionEntries;
 
-		if (descriptionEntriesChat) activity.descriptionEntriesChat = descriptionEntriesChat;
+		if (descriptionEntriesChat?.length === 1 && typeof descriptionEntriesChat[0] === "string") activity.descriptionChat = descriptionEntriesChat[0];
+		else if (descriptionEntriesChat) activity.descriptionEntriesChat = descriptionEntriesChat;
 	}
 }
