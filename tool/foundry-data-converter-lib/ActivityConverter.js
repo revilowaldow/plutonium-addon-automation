@@ -263,6 +263,11 @@ export class ActivityConverter {
 
 	static _mutPostClean (act) {
 		["_id"].forEach(prop => delete act[prop]);
+
+		// Strip behavior IDs, as seem to be (as of dnd5e 6.0.x) array item identifier only
+		// TODO(Future) may need to re-appraise if more complex behaviors are added
+		act.behaviors
+			?.forEach(behavior => delete behavior._id);
 	}
 
 	/* -------------------------------------------- */
