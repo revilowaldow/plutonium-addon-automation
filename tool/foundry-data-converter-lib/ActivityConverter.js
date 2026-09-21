@@ -545,13 +545,16 @@ export class ActivityConverter {
 		if (getHtmlEntries == null) throw new Error(`"getHtmlEntries" must be provided for activity description conversion!`);
 
 		const descriptionEntries = this._getDescriptionEntries({json, html: htmlValue, getHtmlEntries, foundryIdToSpellInfo, foundryIdToMonsterInfo, foundryIdToItemInfo, foundryIdToEmbedEntries});
-		if (descriptionEntries) activity.descriptionEntries = descriptionEntries;
 		const descriptionEntriesChat = this._getDescriptionEntries({json, html: htmlChatFlavor, getHtmlEntries, foundryIdToSpellInfo, foundryIdToMonsterInfo, foundryIdToItemInfo, foundryIdToEmbedEntries});
-		if (descriptionEntriesChat) activity.descriptionEntriesChat = descriptionEntriesChat;
 
 		delete activity.description.value;
 		delete activity.description.chatFlavor;
 
 		if (!Object.keys(activity.description).length) delete activity.description;
+
+		if (descriptionEntries?.length === 1 && typeof descriptionEntries[0] === "string") activity.description = descriptionEntries[0];
+		else if (descriptionEntries) activity.descriptionEntries = descriptionEntries;
+
+		if (descriptionEntriesChat) activity.descriptionEntriesChat = descriptionEntriesChat;
 	}
 }
