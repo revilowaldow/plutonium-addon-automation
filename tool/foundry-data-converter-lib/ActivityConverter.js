@@ -508,15 +508,13 @@ export class ActivityConverter {
 
 	/* -------------------------------------------- */
 
-	static _mutDescription ({json, activity, getHtmlEntries, foundryIdToSpellInfo, foundryIdToMonsterInfo, foundryIdToItemInfo, foundryIdToEmbedEntries}) {
-		if (!activity?.description?.chatFlavor) return;
+	static _getDescriptionEntries ({json, html, getHtmlEntries, foundryIdToSpellInfo, foundryIdToMonsterInfo, foundryIdToItemInfo, foundryIdToEmbedEntries}) {
+		if (!html) return null;
 
-		if (getHtmlEntries == null) throw new Error(`"getHtmlEntries" must be provided for activity description conversion!`);
+		const descriptionEntriesRaw = ConverterUtil.getRawDescriptionEntries({json, html, getHtmlEntries});
+		if (!descriptionEntriesRaw) return null;
 
-		const descriptionEntriesRaw = ConverterUtil.getRawDescriptionEntries({json, html: activity.description.chatFlavor, getHtmlEntries});
-		if (!descriptionEntriesRaw) return delete activity.description.chatFlavor;
-
-		const descriptionEntries = HtmlConverterPostProcessor.getPostProcessed(
+		const out = HtmlConverterPostProcessor.getPostProcessed(
 			descriptionEntriesRaw,
 			{
 				name: json.name,
@@ -527,9 +525,26 @@ export class ActivityConverter {
 				foundryIdToEmbedEntries,
 			},
 		);
+		if (!out?.length) return null;
 
+		return typeof out === "string" ? [out] : out;
+	}
+
+	static _mutDescription ({json, activity, getHtmlEntries, foundryIdToSpellInfo, foundryIdToMonsterInfo, foundryIdToItemInfo, foundryIdToEmbedEntries}) {
+		const htmlValue = activity?.description?.value;
+		const htmlChatFlavor = activity?.description?.chatFlavor;
+		if (!htmlValue && !htmlChatFlavor) return;
+
+		if (getHtmlEntries == null) throw new Error(`"getHtmlEntries" must be provided for activity description conversion!`);
+
+		const descriptionEntries = this._getDescriptionEntries({json, html: htmlValue, getHtmlEntries, foundryIdToSpellInfo, foundryIdToMonsterInfo, foundryIdToItemInfo, foundryIdToEmbedEntries});
+		if (descriptionEntries) activity.descriptionEntries = descriptionEntries;
+		const descriptionEntriesChat = this._getDescriptionEntries({json, html: htmlChatFlavor, getHtmlEntries, foundryIdToSpellInfo, foundryIdToMonsterInfo, foundryIdToItemInfo, foundryIdToEmbedEntries});
+		if (descriptionEntriesChat) activity.descriptionEntriesChat = descriptionEntriesChat;
+
+		delete activity.description.value;
 		delete activity.description.chatFlavor;
-		if (!Object.keys(activity.description)?.length) delete activity.description;
-		activity.descriptionEntries = typeof descriptionEntries === "string" ? [descriptionEntries] : descriptionEntries;
+
+		if (!Object.keys(activity.description).length) delete activity.description;
 	}
 }
